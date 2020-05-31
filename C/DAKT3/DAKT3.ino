@@ -22,8 +22,7 @@ float uMax = 230;
 bool jump = 1;
 
 void setup()
-{
-  configServer();
+{  
   pinMode(acs712, INPUT);
   pinMode(zmpt, INPUT);
   pinMode(relay, OUTPUT);
@@ -36,9 +35,12 @@ void setup()
 
   lcd.init();
   lcd.backlight();
-  lcd.print("Testing...");
+  lcd.print("Waiting wifi...");  
   digitalWrite(relay, HIGH);
-  delay(1000);
+  configServer();
+  lcd.clear(); 
+  lcd.print("Connected wifi");
+  delay(3000);
   digitalWrite(relay, LOW);
   lcd.clear();
 }
