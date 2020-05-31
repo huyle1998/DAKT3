@@ -53,7 +53,7 @@ void configServer() {
   server.begin();
 }
 
-void sendDataToServer(){
+void sendDataToServer(unsigned int digitalCurrent, unsigned int digitalVoltage){
   WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,
