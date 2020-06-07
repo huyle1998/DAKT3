@@ -1,4 +1,5 @@
 #include "server.h"
+#include "timer.h"
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -23,15 +24,16 @@ bool jump = 1;
 
 void setup()
 {  
+  Serial.begin(9600);
+  ConfigTimer(2000);
+  
   pinMode(acs712, INPUT);
   pinMode(zmpt, INPUT);
   pinMode(relay, OUTPUT);
 
   pinMode(buttonPlus, INPUT_PULLDOWN);
   pinMode(buttonMinus, INPUT_PULLDOWN);
-  pinMode(buttonMode, INPUT_PULLDOWN);
-
-  Serial.begin(9600);
+  pinMode(buttonMode, INPUT_PULLDOWN);  
 
   lcd.init();
   lcd.backlight();
@@ -52,15 +54,14 @@ void loop()
 
   analogCurrent = (digitalCurrent - 2048) / 2048 * 250;
   analogVoltage = (digitalVoltage - 2048) / 2048 * 5;
-  sendDataToServer(digitalCurrent, digitalVoltage);
+  ComunicateToServer(analogCurrent, analogVoltage);
+  InteruptTimer_1();    // tai day cu 2s gui tin hieu len server 1 lan
   if(digitalRead(buttonMode) == HIGH) changeMode();
   showInformation();
 }
 
 void changeMode()
-{
-  Serial.print("digitalRead(buttonMode) = " + String(digitalRead(buttonMode)));
-  Serial.println("\tIn changeMode");
+{  
   while (digitalRead(buttonMode) == HIGH);
   lcd.clear();
   lcd.print("Set I max");
@@ -124,7 +125,7 @@ void showInformation()
 {
 //  lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("U = "); lcd.setCursor(4,0);lcd.print(analogVoltage, 1);  
+  lcd.print("U = "); lcd.setCursor(4,0);lcd.print(11);  
   lcd.setCursor(0, 1);
-  lcd.print("I = "); lcd.setCursor(4,1);lcd.print(analogCurrent, 2);  
+  lcd.print("I = "); lcd.setCursor(4,1);lcd.print(22);  
 }

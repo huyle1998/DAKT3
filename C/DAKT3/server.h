@@ -7,7 +7,7 @@
 #include <WiFi.h>
 
 // Replace with your network credentials
-const char* ssid = "hnb";
+const char* ssid_2 = "hnb";
 const char* password = "12345678";
 
 // Set web server port number to 80
@@ -37,10 +37,10 @@ void configServer() {
   // Set outputs to LOW
   digitalWrite(output32, LOW);  
 
-  // Connect to Wi-Fi network with SSID and password
+  // Connect to Wi-Fi network with ssid_2 and password
   Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
+  Serial.println(ssid_2);
+  WiFi.begin(ssid_2, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -53,7 +53,7 @@ void configServer() {
   server.begin();
 }
 
-void sendDataToServer(unsigned int digitalCurrent, unsigned int digitalVoltage){
+void ComunicateToServer(float analogCurrent, float analogVoltage){
   WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,
@@ -149,4 +149,5 @@ void sendDataToServer(unsigned int digitalCurrent, unsigned int digitalVoltage){
     Serial.println("Client disconnected.");
     Serial.println("");
   }
+  
 }
