@@ -12,13 +12,8 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define buttonMinus 18
 #define buttonMode 5
 
-unsigned int digitalCurrent = 0;
-unsigned int digitalVoltage = 0;
+int count = 1000;
 
-float analogCurrent = 0;
-float analogVoltage = 0;
-float iMax = 2;
-float uMax = 230;
 
 bool jump = 1;
 
@@ -42,20 +37,22 @@ void setup()
   configServer();
   lcd.clear(); 
   lcd.print("Connected wifi");
-  delay(3000);
+  delay(1000);
   digitalWrite(relay, LOW);
   lcd.clear();
 }
 
 void loop()
 {
-  digitalCurrent = analogRead(acs712);
-  digitalVoltage = analogRead(zmpt);
+//  delay(1000);
+  digitalCurrent   = analogRead(acs712);
+  digitalVoltage   = analogRead(zmpt);
+//  Serial.println(digitalVoltage);
 
-  analogCurrent = (digitalCurrent - 2048) / 2048 * 250;
-  analogVoltage = (digitalVoltage - 2048) / 2048 * 5;
-  ComunicateToServer(analogCurrent, analogVoltage);
-  InteruptTimer_1();    // tai day cu 2s gui tin hieu len server 1 lan
+  analogCurrent = ((digitalCurrent/2048)*5000-2500)/66;
+  analogVoltage = (digitalVoltage/2048)* 5*5.128;
+  ComunicateToServer();
+//  InteruptTimer_1();    // tai day cu 2s gui tin hieu len server 1 lan
   if(digitalRead(buttonMode) == HIGH) changeMode();
   showInformation();
 }
@@ -123,9 +120,16 @@ void changeMode()
 
 void showInformation()
 {
+  
+  if(count == 1000)
+  {
+    lcd.setCursor(0, 0);
+    lcd.print("I = "); lcd.setCursor(4,0);lcd.print(analogCurrent);
+    lcd.setCursor(0, 1);  
+    lcd.print("U = "); lcd.setCursor(4,1);lcd.print(digitalVoltage); 
+    count = 0;
+  }
+  count++;
 //  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("U = "); lcd.setCursor(4,0);lcd.print(11);  
-  lcd.setCursor(0, 1);
-  lcd.print("I = "); lcd.setCursor(4,1);lcd.print(22);  
+   
 }
