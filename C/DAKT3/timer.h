@@ -27,7 +27,7 @@ void InteruptTimer_1() {
     interruptCounter--;
     portEXIT_CRITICAL(&timerMux);
 	// Code timer here
-	Serial.println("Timer here");
+	
 	
   }
 }

@@ -4,13 +4,13 @@
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-#define acs712 34
-#define zmpt 35
-#define relay 32
+#define acs712  34
+#define zmpt    35
+#define relay   32
 
-#define buttonPlus 19
-#define buttonMinus 18
-#define buttonMode 5
+#define buttonPlus    19
+#define buttonMinus   18
+#define buttonMode    5
 
 int count = 1000;
 
@@ -20,7 +20,7 @@ bool jump = 1;
 void setup()
 {  
   Serial.begin(9600);
-  ConfigTimer(2000);
+//  ConfigTimer(1000);
   
   pinMode(acs712, INPUT);
   pinMode(zmpt, INPUT);
@@ -44,18 +44,17 @@ void setup()
 
 void loop()
 {
-//  delay(1000);
-  digitalCurrent   = analogRead(acs712);
+  digitalCurrent   = analogRead(acs712);  
   digitalVoltage   = analogRead(zmpt);
-//  Serial.println(digitalVoltage);
 
-  analogCurrent = ((digitalCurrent/2048)*5000-2500)/66;
+//  analogCurrent = ((digitalCurrent/2048)*5000-2500)/66;
+  analogCurrent = ((digitalCurrent + 1)*0.0048828125 - 2.5)/0.066;
   analogVoltage = (digitalVoltage/2048)* 5*5.128;
   ComunicateToServer();
-//  InteruptTimer_1();    // tai day cu 2s gui tin hieu len server 1 lan
   if(digitalRead(buttonMode) == HIGH) changeMode();
   showInformation();
 }
+
 
 void changeMode()
 {  
@@ -121,12 +120,12 @@ void changeMode()
 void showInformation()
 {
   
-  if(count == 1000)
+  if(count == 30000)    // Timer = 0.5s ~ 30000  
   {
     lcd.setCursor(0, 0);
-    lcd.print("I = "); lcd.setCursor(4,0);lcd.print(analogCurrent);
+    lcd.print("I = "); lcd.setCursor(4,0);lcd.print(digitalCurrent);
     lcd.setCursor(0, 1);  
-    lcd.print("U = "); lcd.setCursor(4,1);lcd.print(digitalVoltage); 
+    lcd.print("U = "); lcd.setCursor(4,1);lcd.print(analogVoltage); 
     count = 0;
   }
   count++;
