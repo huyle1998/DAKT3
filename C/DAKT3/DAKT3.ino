@@ -1,3 +1,4 @@
+#include "esp32-hal-cpu.h"
 #include "server.h"
 #include "timer.h"
 #include <Wire.h>
@@ -12,16 +13,16 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define buttonMinus   18
 #define buttonMode    5
 
+#define b0 
+
 int count = 1000;
-
-
 bool jump = 1;
 
 void setup()
 {  
   Serial.begin(9600);
-//  ConfigTimer(1000);
-  
+  ConfigTimer(200);   // Ts = 200us ~ fs = 5kHz 
+    
   pinMode(acs712, INPUT);
   pinMode(zmpt, INPUT);
   pinMode(relay, OUTPUT);
@@ -32,7 +33,7 @@ void setup()
 
   lcd.init();
   lcd.backlight();
-  lcd.print("Waiting wifi...");  
+  lcd.print("Waiting wifi");  
   digitalWrite(relay, HIGH);
   configServer();
   lcd.clear(); 
@@ -43,16 +44,11 @@ void setup()
 }
 
 void loop()
-{
-  digitalCurrent   = analogRead(acs712);  
-  digitalVoltage   = analogRead(zmpt);
-
-//  analogCurrent = ((digitalCurrent/2048)*5000-2500)/66;
-  analogCurrent = ((digitalCurrent + 1)*0.0048828125 - 2.5)/0.066;
-  analogVoltage = (digitalVoltage/2048)* 5*5.128;
+{  
   ComunicateToServer();
   if(digitalRead(buttonMode) == HIGH) changeMode();
-  showInformation();
+  InteruptTimer_1();
+  showInformation();  
 }
 
 
@@ -118,17 +114,10 @@ void changeMode()
 }
 
 void showInformation()
-{
+{     
+  lcd.setCursor(0, 0);
+  lcd.print("I = "); lcd.setCursor(4,0);lcd.print(Dumax);
   
-  if(count == 30000)    // Timer = 0.5s ~ 30000  
-  {
-    lcd.setCursor(0, 0);
-    lcd.print("I = "); lcd.setCursor(4,0);lcd.print(digitalCurrent);
-    lcd.setCursor(0, 1);  
-    lcd.print("U = "); lcd.setCursor(4,1);lcd.print(analogVoltage); 
-    count = 0;
-  }
-  count++;
-//  lcd.clear();
-   
+  lcd.setCursor(0, 1);  
+  lcd.print("U = "); lcd.setCursor(4,1);lcd.print(analogVoltage);   
 }

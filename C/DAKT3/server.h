@@ -6,12 +6,18 @@
 // Load Wi-Fi library
 #include <WiFi.h>
 
-static float analogCurrent = 0;
-static float analogVoltage = 0;
+static  double analogCurrent = 0, analogVoltage = 0, temp = 0;
 static float iMax = 2;
 static float uMax = 230;
 static int digitalCurrent = 0;
-static int digitalVoltage = 0;
+static int digitalVoltage = 0, digitalVoltage1 = 0;
+static int Dumax = 0;
+static int Dimax = 0;
+static int climbhill = 0;
+int count2 = 0;
+//static float osg_u[3]= {0,0,0};
+//static float osg_qu[3]= {0,0,0};
+//static float u[3]= {0,0,0}
 
 // Replace with your network credentials
 const char *ssid_2 = "hnb";
