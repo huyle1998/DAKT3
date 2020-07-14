@@ -40,8 +40,9 @@ void InteruptTimer_1() {
       analogVoltage = (float) sqrt(temp/100);
       analogVoltage = (float) 3*pow(10,-5)*pow(analogVoltage,3) - 0.02855*pow(analogVoltage,2) + 8.1822*analogVoltage - 523.81;
       temp = 0;
-      Serial.println("In timer 1 == 100");
+//      Serial.println("In timer 1 == 100");
     }
  
   }
+  
 }

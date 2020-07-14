@@ -1,7 +1,7 @@
-#include "esp32-hal-cpu.h"
+//#include "esp32-hal-cpu.h"
 #include "server.h"
 #include "timer.h"
-#include <Wire.h>
+//#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -17,6 +17,9 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 int count = 1000;
 bool jump = 1;
+
+void showInfor();
+void changeMode();
 
 void setup()
 {  
@@ -48,9 +51,23 @@ void loop()
   ComunicateToServer();
   if(digitalRead(buttonMode) == HIGH) changeMode();
   InteruptTimer_1();
-  showInformation();  
+  showInfor();  
 }
 
+void showInfor()
+{     
+  count++;
+  if (count == 30000)   // tai day count de lcd k gay delay???
+  {
+    count = 0;    
+    lcd.setCursor(0, 0);
+    lcd.print("I = "); lcd.setCursor(4,0); lcd.print(analogCurrent);
+
+    lcd.setCursor(0, 1);
+    lcd.print("U = "); lcd.setCursor(4,1); lcd.print(analogVoltage);
+
+  } 
+}
 
 void changeMode()
 {  
@@ -111,13 +128,4 @@ void changeMode()
   while (digitalRead(buttonMode) == HIGH);
   jump = 1;
   lcd.clear();
-}
-
-void showInformation()
-{     
-  lcd.setCursor(0, 0);
-  lcd.print("I = "); lcd.setCursor(4,0);lcd.print(Dumax);
-  
-  lcd.setCursor(0, 1);  
-  lcd.print("U = "); lcd.setCursor(4,1);lcd.print(analogVoltage);   
 }
