@@ -42,7 +42,7 @@ void setup()
   lcd.clear(); 
   lcd.print("Connected wifi");
   delay(1000);
-  digitalWrite(relay, LOW);
+  digitalWrite(relay, HIGH);
   lcd.clear();
 }
 
@@ -51,13 +51,26 @@ void loop()
   ComunicateToServer();
   if(digitalRead(buttonMode) == HIGH) changeMode();
   InteruptTimer_1();
+  checkRelay();
   showInfor();  
+}
+
+void checkRelay()
+{
+  if(analogVoltage > uMax+50 || analogCurrent > iMax+1)
+  {
+    digitalWrite(relay, LOW);
+  }
+  else
+  {
+//    digitalWrite(relay, HIGH);
+  }
 }
 
 void showInfor()
 {     
   count++;
-  if (count == 30000)   // tai day count de lcd k gay delay???
+  if (count == 60000)   // tai day count de lcd k gay delay???
   {
     count = 0;    
     lcd.setCursor(0, 0);
@@ -74,6 +87,9 @@ void changeMode()
   while (digitalRead(buttonMode) == HIGH);
   lcd.clear();
   lcd.print("Set I max");
+  lcd.setCursor(0, 1);
+  lcd.print("I Max = ");
+  lcd.print(iMax, 1);
   while (jump) // Set I max
   {
     if (digitalRead(buttonPlus) == HIGH)
@@ -102,6 +118,9 @@ void changeMode()
 
   lcd.clear();
   lcd.print("Set U max");
+  lcd.setCursor(0, 1);
+  lcd.print("U Max = ");
+  lcd.print(uMax, 0);
   while (jump) // Set U max
   {
     if (digitalRead(buttonPlus) == HIGH)

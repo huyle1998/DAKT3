@@ -6,11 +6,11 @@
 // Load Wi-Fi library
 #include <WiFi.h>
 
-static  double analogCurrent = 0, analogVoltage = 0, temp = 0;
+static  double analogCurrent = 0, analogVoltage = 0, temp = 0, temp2 = 0;
 static float iMax = 2;
 static float uMax = 230;
-static int digitalCurrent = 0;
-static int digitalVoltage = 0, digitalVoltage1 = 0;
+static int digitalCurrent = 0, oldC = 0;
+static int digitalVoltage = 0, digitalVoltage1 = 0, oldV = 0;
 static int Dumax = 0;
 static int Dimax = 0;
 static int climbhill = 0;
